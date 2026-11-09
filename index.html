@@ -1,0 +1,694 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBT - The Missing Document</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #081426;
+    color: #edf4ff;
+}
+
+.container {
+    max-width: 950px;
+    margin: 35px auto;
+    padding: 25px;
+}
+
+header {
+    text-align: center;
+    padding: 25px;
+    border: 1px solid #29466b;
+    border-radius: 14px;
+    background: #10233d;
+}
+
+.tag {
+    color: #53c7ff;
+    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 35px;
+    margin: 12px 0;
+}
+
+.subtitle {
+    color: #a9bdd6;
+}
+
+.panel {
+    background: #10233d;
+    border: 1px solid #29466b;
+    border-radius: 12px;
+    padding: 22px;
+    margin-top: 20px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    background: #193451;
+    padding: 12px 20px;
+    border-radius: 9px;
+    text-align: center;
+    min-width: 120px;
+}
+
+.stat small {
+    display: block;
+    color: #9bb4d2;
+    margin-bottom: 5px;
+}
+
+.stat strong {
+    font-size: 22px;
+}
+
+.progress {
+    height: 10px;
+    background: #263c58;
+    border-radius: 20px;
+    margin-top: 18px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #38bdf8;
+    transition: width 0.3s;
+}
+
+button {
+    background: #1686c9;
+    color: white;
+    border: none;
+    padding: 12px 19px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 6px 4px 0 0;
+}
+
+button:hover {
+    background: #0873b3;
+}
+
+button:disabled {
+    background: #52647a;
+    cursor: not-allowed;
+}
+
+.answer {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #193451;
+    border: 1px solid #365777;
+    margin: 10px 0;
+    padding: 14px;
+}
+
+.answer:hover {
+    background: #244b70;
+}
+
+.answer.correct {
+    background: #145b45;
+    border-color: #36c994;
+}
+
+.answer.wrong {
+    background: #71353b;
+    border-color: #ed747d;
+}
+
+.question {
+    font-size: 19px;
+    line-height: 1.5;
+    margin: 18px 0;
+}
+
+.mission-label {
+    color: #53c7ff;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.feedback {
+    min-height: 25px;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.hint {
+    color: #f5ce76;
+    background: #3d351f;
+    border-left: 4px solid #e8b94d;
+    padding: 12px;
+    margin-top: 12px;
+    display: none;
+}
+
+.code-digits {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.digit {
+    background: #193451;
+    border: 1px solid #365777;
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 24px;
+    min-width: 50px;
+    text-align: center;
+}
+
+input {
+    background: #081426;
+    border: 1px solid #52708f;
+    color: white;
+    padding: 13px;
+    font-size: 19px;
+    width: 180px;
+    border-radius: 7px;
+    letter-spacing: 5px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    text-align: center;
+    color: #8299b5;
+    margin-top: 25px;
+    font-size: 12px;
+}
+
+@media(max-width: 600px) {
+    .container {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <div class="tag">IBT // DIGITAL INVESTIGATION</div>
+    <h1>THE MISSING DOCUMENT</h1>
+    <p class="subtitle">
+        A Word Processing Escape Room
+    </p>
+    <p>
+        Five missions. Ten questions. One missing document.
+    </p>
+</header>
+
+<section class="panel" id="intro">
+    <h2>Investigation Briefing</h2>
+    <p>
+        A business document has disappeared from the company computer.
+        Important formatting information is missing, and the document
+        cannot be recovered until five technical missions are completed.
+    </p>
+    <p>
+        Your team must answer questions about columns, column breaks,
+        section breaks, footnotes, and endnotes.
+    </p>
+    <p><strong>Mission Rules:</strong></p>
+    <ul>
+        <li>You have 10 minutes to complete the investigation.</li>
+        <li>Each correct answer earns 10 points.</li>
+        <li>Each incorrect answer costs 2 points.</li>
+        <li>Using a hint costs 3 points.</li>
+        <li>Collect one secret digit after each mission.</li>
+        <li>Enter all five digits to unlock the final vault.</li>
+    </ul>
+    <button onclick="startGame()">START INVESTIGATION</button>
+</section>
+
+<section class="panel hidden" id="game">
+    <div class="stats">
+        <div class="stat">
+            <small>TIME LEFT</small>
+            <strong id="timer">10:00</strong>
+        </div>
+        <div class="stat">
+            <small>SCORE</small>
+            <strong id="score">0</strong>
+        </div>
+        <div class="stat">
+            <small>PROGRESS</small>
+            <strong id="progressText">0 / 10</strong>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div id="missionArea" class="panel">
+        <div class="mission-label" id="missionLabel"></div>
+        <h2 id="missionTitle"></h2>
+        <p id="missionDescription"></p>
+        <div class="question" id="questionText"></div>
+        <div id="answers"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="hint" id="hintText"></div>
+        <button id="hintButton" onclick="showHint()">USE HINT (-3 POINTS)</button>
+        <button id="nextButton" onclick="nextQuestion()" disabled>
+            NEXT QUESTION
+        </button>
+    </div>
+
+    <div class="panel">
+        <h3>Recovered Secret Digits</h3>
+        <div class="code-digits" id="digits">
+            <div class="digit">?</div>
+            <div class="digit">?</div>
+            <div class="digit">?</div>
+            <div class="digit">?</div>
+            <div class="digit">?</div>
+        </div>
+    </div>
+</section>
+
+<section class="panel hidden" id="vault">
+    <h2>FINAL SECURITY VAULT</h2>
+    <p>
+        All five missions have been completed. Enter the five-digit
+        access code collected during the investigation.
+    </p>
+    <input id="vaultInput" type="text" maxlength="5"
+           placeholder="_____">
+    <br>
+    <button onclick="checkVault()">UNLOCK VAULT</button>
+    <p id="vaultFeedback" class="feedback"></p>
+</section>
+
+<section class="panel hidden" id="ending">
+    <h2>DOCUMENT RECOVERED</h2>
+    <p>
+        Congratulations! Your team successfully completed the
+        investigation and recovered the missing business document.
+    </p>
+    <h3>Final Results</h3>
+    <p id="finalScore"></p>
+    <p id="finalTime"></p>
+    <button onclick="location.reload()">PLAY AGAIN</button>
+</section>
+
+<footer>
+    WORD PROCESSING // GRADE 9 IBT
+</footer>
+
+</div>
+
+<script>
+const missions = [
+{
+    title: "MISSION 1: THE NEWSLETTER",
+    topic: "COLUMNS",
+    description: "A company newsletter needs to be formatted professionally.",
+    questions: [
+        {
+            question: "A newsletter contains a large amount of text. The designer wants the information to appear in two vertical sections, similar to a newspaper. Which feature should be used?",
+            answers: [
+                "Page Borders",
+                "Columns",
+                "WordArt",
+                "Page Orientation"
+            ],
+            correct: 1,
+            hint: "Think about how newspaper articles are organized."
+        },
+        {
+            question: "A document has two columns, but the left column needs to be wider than the right column. Which option allows this?",
+            answers: [
+                "Equal Column Width",
+                "Page Colour",
+                "Uneven Columns",
+                "Line Spacing"
+            ],
+            correct: 2,
+            hint: "The two columns do not have to be the same width."
+        }
+    ],
+    digit: "4"
+},
+{
+    title: "MISSION 2: THE LOST PARAGRAPH",
+    topic: "COLUMN BREAKS",
+    description: "A paragraph is appearing in the wrong column.",
+    questions: [
+        {
+            question: "A student wants a new paragraph to begin at the top of the second column instead of continuing directly after the previous paragraph. Which feature should be inserted?",
+            answers: [
+                "Page Break",
+                "Column Break",
+                "Footnote",
+                "Header"
+            ],
+            correct: 1,
+            hint: "This break moves text to the next column."
+        },
+        {
+            question: "Why is using a column break better than repeatedly pressing Enter to move text into the next column?",
+            answers: [
+                "It automatically changes the font.",
+                "It keeps text placement organized when the document changes.",
+                "It deletes extra spaces.",
+                "It changes the page size."
+            ],
+            correct: 1,
+            hint: "Think about what happens when more text is added."
+        }
+    ],
+    digit: "7"
+},
+{
+    title: "MISSION 3: THE SECTION DISASTER",
+    topic: "SECTION BREAKS",
+    description: "Different parts of a report require different formatting.",
+    questions: [
+        {
+            question: "A report needs a portrait cover page and a landscape page for a large chart. Which feature allows these different page layouts in one document?",
+            answers: [
+                "Section Break",
+                "Column Break",
+                "Footnote",
+                "Text Highlight"
+            ],
+            correct: 0,
+            hint: "This feature divides a document into separately formatted parts."
+        },
+        {
+            question: "A student changes the page orientation, but the entire document becomes landscape. What should the student do to change only one part?",
+            answers: [
+                "Insert a section break before and after that part.",
+                "Press Enter several times.",
+                "Insert a footnote.",
+                "Change the font size."
+            ],
+            correct: 0,
+            hint: "Separate the part that needs different formatting."
+        }
+    ],
+    digit: "2"
+},
+{
+    title: "MISSION 4: THE MISSING CLUE",
+    topic: "FOOTNOTES",
+    description: "A research report is missing its source explanations.",
+    questions: [
+        {
+            question: "A student uses information from a website and wants to add a source reference at the bottom of the same page. Which feature should be used?",
+            answers: [
+                "Endnote",
+                "Footnote",
+                "Column Break",
+                "Page Number"
+            ],
+            correct: 1,
+            hint: "This reference appears at the bottom of the page."
+        },
+        {
+            question: "What connects a footnote in the text to its explanation at the bottom of the page?",
+            answers: [
+                "A coloured heading",
+                "A page border",
+                "A numbered or symbol reference mark",
+                "A section title"
+            ],
+            correct: 2,
+            hint: "Look for a small number or symbol beside the related text."
+        }
+    ],
+    digit: "9"
+},
+{
+    title: "MISSION 5: THE FINAL MESSAGE",
+    topic: "ENDNOTES",
+    description: "The final report needs its references organized.",
+    questions: [
+        {
+            question: "A student wants all source notes collected together at the end of a document instead of at the bottom of each page. Which feature should be used?",
+            answers: [
+                "Footnotes",
+                "Endnotes",
+                "Columns",
+                "Page Breaks"
+            ],
+            correct: 1,
+            hint: "These notes are placed at the end of a document or section."
+        },
+        {
+            question: "What is the main difference between a footnote and an endnote?",
+            answers: [
+                "Footnotes appear at the bottom of a page, while endnotes appear at the end of a document or section.",
+                "Footnotes are only used for pictures.",
+                "Endnotes change the page orientation.",
+                "There is no difference."
+            ],
+            correct: 0,
+            hint: "Think about where each type of note is placed."
+        }
+    ],
+    digit: "5"
+}
+];
+
+let missionIndex = 0;
+let questionIndex = 0;
+let score = 0;
+let totalAnswered = 0;
+let timeLeft = 600;
+let timerInterval;
+let answered = false;
+let hintUsed = false;
+let collectedDigits = [];
+
+function startGame() {
+    document.getElementById("intro").classList.add("hidden");
+    document.getElementById("game").classList.remove("hidden");
+
+    showQuestion();
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            endGame();
+        }
+    }, 1000);
+}
+
+function updateTimer() {
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+
+    document.getElementById("timer").textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+
+    if (timeLeft <= 60) {
+        document.getElementById("timer").style.color = "#ff7474";
+    }
+}
+
+function showQuestion() {
+    answered = false;
+    hintUsed = false;
+
+    const mission = missions[missionIndex];
+    const question = mission.questions[questionIndex];
+
+    document.getElementById("missionLabel").textContent =
+        "MISSION " + (missionIndex + 1) + " // " + mission.topic;
+
+    document.getElementById("missionTitle").textContent =
+        mission.title;
+
+    document.getElementById("missionDescription").textContent =
+        mission.description;
+
+    document.getElementById("questionText").textContent =
+        "QUESTION " + (questionIndex + 1) + ": " + question.question;
+
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("hintText").style.display = "none";
+    document.getElementById("hintButton").disabled = false;
+    document.getElementById("nextButton").disabled = true;
+
+    const answerArea = document.getElementById("answers");
+    answerArea.innerHTML = "";
+
+    question.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.className = "answer";
+        button.textContent =
+            String.fromCharCode(65 + index) + ". " + answer;
+
+        button.onclick = () => selectAnswer(index, button);
+
+        answerArea.appendChild(button);
+    });
+}
+
+function selectAnswer(index, button) {
+    if (answered) return;
+
+    answered = true;
+    totalAnswered++;
+
+    const question = missions[missionIndex].questions[questionIndex];
+    const buttons = document.querySelectorAll(".answer");
+
+    buttons.forEach(b => b.disabled = true);
+
+    if (index === question.correct) {
+        score += 10;
+        button.classList.add("correct");
+        document.getElementById("feedback").textContent =
+            "CORRECT! +10 POINTS";
+        document.getElementById("feedback").style.color = "#36c994";
+    } else {
+        score -= 2;
+        button.classList.add("wrong");
+        buttons[question.correct].classList.add("correct");
+        document.getElementById("feedback").textContent =
+            "INCORRECT! -2 POINTS. The correct answer is highlighted.";
+        document.getElementById("feedback").style.color = "#ff8585";
+    }
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("progressText").textContent =
+        totalAnswered + " / 10";
+
+    document.getElementById("progressFill").style.width =
+        (totalAnswered / 10 * 100) + "%";
+
+    document.getElementById("hintButton").disabled = true;
+    document.getElementById("nextButton").disabled = false;
+}
+
+function showHint() {
+    if (answered || hintUsed) return;
+
+    hintUsed = true;
+    score -= 3;
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("hintText").textContent =
+        "HINT: " +
+        missions[missionIndex].questions[questionIndex].hint;
+
+    document.getElementById("hintText").style.display = "block";
+    document.getElementById("hintButton").disabled = true;
+}
+
+function nextQuestion() {
+    if (!answered) return;
+
+    if (questionIndex === 0) {
+        questionIndex = 1;
+        showQuestion();
+    } else {
+        collectedDigits.push(missions[missionIndex].digit);
+        updateDigits();
+
+        missionIndex++;
+        questionIndex = 0;
+
+        if (missionIndex >= missions.length) {
+            clearInterval(timerInterval);
+            document.getElementById("game").classList.add("hidden");
+            document.getElementById("vault").classList.remove("hidden");
+        } else {
+            showQuestion();
+        }
+    }
+}
+
+function updateDigits() {
+    const digitBoxes = document.querySelectorAll(".digit");
+
+    digitBoxes.forEach((box, index) => {
+        box.textContent = collectedDigits[index] || "?";
+    });
+}
+
+function checkVault() {
+    const code = document.getElementById("vaultInput").value;
+    const correctCode = collectedDigits.join("");
+
+    if (code === correctCode) {
+        document.getElementById("vaultFeedback").textContent =
+            "ACCESS GRANTED. DOCUMENT RECOVERED!";
+        document.getElementById("vaultFeedback").style.color = "#36c994";
+
+        document.getElementById("vault").classList.add("hidden");
+        document.getElementById("ending").classList.remove("hidden");
+
+        document.getElementById("finalScore").textContent =
+            "Final Score: " + score + " points";
+
+        document.getElementById("finalTime").textContent =
+            "Time Remaining: " +
+            document.getElementById("timer").textContent;
+    } else {
+        document.getElementById("vaultFeedback").textContent =
+            "ACCESS DENIED. Check your five digits and try again.";
+        document.getElementById("vaultFeedback").style.color = "#ff8585";
+    }
+}
+
+function endGame() {
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("vault").classList.add("hidden");
+    document.getElementById("ending").classList.remove("hidden");
+
+    document.getElementById("finalScore").textContent =
+        "Final Score: " + score + " points";
+
+    document.getElementById("finalTime").textContent =
+        "Time expired. Try again to recover the document.";
+}
+</script>
+
+</body>
+</html>
